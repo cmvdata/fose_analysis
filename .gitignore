@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.Python
+venv/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Outputs generados (se regeneran corriendo los notebooks)
+plots/*.png
+results/*.csv
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Archivos temporales
+*.tmp
+*.log
+
+# Microdatos ERCUE (MINEM/OSINERGMIN — no redistribuir, descargar de la fuente)
+data/*.parquet
