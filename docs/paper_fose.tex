@@ -1,0 +1,438 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{siunitx}
+\usepackage[hidelinks]{hyperref}
+\usepackage[round]{natbib}
+\usepackage{geometry}
+\geometry{margin=2.6cm}
+\usepackage{enumitem}
+\usepackage{microtype}
+
+\graphicspath{{../plots/}}
+\captionsetup{font=small,labelfont=bf}
+\setlength{\parskip}{0.2em}
+
+\title{\vspace{-1.2cm}\bfseries Energy Poverty and the Targeting of Electricity
+Subsidies: Evidence from the FOSE in Peru}
+\author{Carlo Vilches Cevallos\thanks{Universitat de Barcelona, Spain.
+Master's in Economics, Regulation and Competition in Public Services.
+Contact: \texttt{cvil\_49@mail.com}. All errors are the author's own.}\\[2pt]
+\small Universitat de Barcelona}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This paper evaluates whether the 140~kWh monthly consumption
+threshold used to determine eligibility for Peru's Electricity Social
+Compensation Fund (\textit{Fondo de Compensaci\'on Social El\'ectrica}, FOSE)
+adequately identifies energy-poor households. Using microdata from the 2025
+Residential Energy Consumption and Use Survey (ERCUE, 14{,}815 households), I
+compare the incidence of energy poverty across households near the threshold
+using Coarsened Exact Matching (CEM) and inverse probability weighting (IPW),
+with two complementary indicators: energy overload (2M) and hidden energy
+poverty (HEP). The current threshold exhibits a large inclusion error
+(69.4\%): on average there is no significant difference in energy poverty
+between comparable eligible and ineligible households (ATT $=-2.37$~pp,
+$p=0.330$). However, among non-extreme poor households a sizeable effect
+emerges ($-20.29$~pp, $p=0.014$), robust across specifications.
+Counterfactual simulations indicate that the FOSE plays a protective role in
+rural areas. The findings suggest that the consumption-based design is poorly
+targeted but retains positive effects in specific segments, pointing to the
+need to revise the eligibility criteria.
+
+\medskip
+\noindent\textbf{Keywords:} energy poverty; FOSE; targeting; electricity
+subsidy; Peru; Coarsened Exact Matching.\\
+\textbf{JEL:} Q41, Q48, H23, I38, L94.
+\end{abstract}
+
+\section{Introduction}
+
+Energy poverty---a household's inability to access essential energy services
+at an affordable cost---is a policy problem that extends well beyond developed
+countries \citep{epov2023}. In Latin America, where electricity coverage
+approaches universality but affordability remains precarious, the phenomenon
+has received comparatively little empirical attention. Peru illustrates this
+tension: according to ERCUE 2025, 97\% of households are connected to the
+grid, yet the median energy burden reaches 5.20\% among extreme-poor
+households, and the gap between median urban (92~kWh/month) and rural
+(16~kWh/month) consumption reflects two radically different energy realities.
+
+Peru's main direct consumer-protection instrument is the FOSE, a cross-subsidy
+created in 2001 that grants discounts on the electricity bill to households
+consuming below a regulated threshold---currently 140~kWh/month, raised from
+100~kWh after the 2022 reform (D.S. 023-2022-PCM). Like many block-tariff
+subsidies, the FOSE uses electricity consumption as its sole eligibility
+criterion, implicitly assuming that low consumption signals economic
+vulnerability. This premise has been questioned across contexts.
+\citet{whittington2015} show that consumption-based subsidies are poorly
+targeted toward the poorest, and \citet{levinson2022} document that the weak
+correlation between electricity consumption and income limits the
+redistributive capacity of tariff discounts. In Spain, evaluations of the
+analogous \textit{Bono Social El\'ectrico} find modest effects: a reduction of
+about two percentage points in the probability of energy poverty
+\citep{bagnoli2022}, no significant effect on subjective indicators
+\citep{garcia2021}, and a declining effect that is nearly null for the poorest
+households \citep{llorca2025}.
+
+Despite the FOSE's relevance for Peruvian social policy, no empirical test of
+its eligibility rule or of its effect on household-level energy-poverty
+indicators exists, to the best of my knowledge. This paper fills that gap. The
+central hypothesis is twofold. \textit{First}, electricity consumption is an
+imperfect proxy for vulnerability: in the aggregate, the 140~kWh rule does not
+cleanly separate vulnerable from non-vulnerable households because the eligible
+group is heavily diluted by non-poor households; yet in the subgroup of
+non-extreme poor households the threshold does discriminate. \textit{Second},
+even where the rule points in the right direction, the size of the tariff
+benefit is too small to produce a clear separation in energy well-being around
+the threshold.
+
+The analysis yields three main findings. The FOSE exhibits a 69.4\% inclusion
+error and a normative exclusion pattern that disproportionately affects rural
+households with shared electricity connections. The 140~kWh threshold produces
+no significant separation in the probability of energy overload between
+comparable eligible and excluded households in the narrow $\pm20$~kWh window,
+though the effect strengthens in wider windows and becomes large and
+significant once the sample is restricted to poor households. Finally, hidden
+energy poverty (HEP) is essentially zero in the neighbourhood of the
+threshold, revealing that energy poverty there manifests exclusively as
+financial overload rather than deprivation.
+
+\section{The FOSE and Peru's Energy Context}
+
+Peru has achieved near-universal electrification (97\% of households).
+However, grid access guarantees neither adequate consumption nor an affordable
+price: the median energy burden is 3.13\% nationally but reaches 5.20\% among
+extreme-poor households. The distribution of consumption is bimodal by area
+(Figure~\ref{fig:dist}): rural density concentrates below 30~kWh, while the
+urban distribution peaks at 60--90~kWh. Overall, 76\% of households consume at
+or below the 140~kWh threshold and are therefore eligible for the FOSE.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig1_consumption_distribution.png}
+\caption{Weighted distribution of monthly electricity consumption and the FOSE
+eligibility threshold, ERCUE 2025. Source: ERCUE 2025; weighted by expansion
+factor; 5~kWh bins.}
+\label{fig:dist}
+\end{figure}
+
+The FOSE was created in 2001 (Law 27510) and operates as an intra-sectoral
+cross-subsidy: users with consumption above the threshold and free-market
+clients finance, through a surcharge, the discounts applied to beneficiaries.
+As of December 2024, two of every three residential users were FOSE
+beneficiaries, and the annual subsidy reached roughly 540~million soles (an
+80\% increase relative to 2019). The 2022 reform (Law 31429) raised the
+threshold and introduced additional exclusion criteria: no more than one
+property or supply point, not being located in a high- or middle-income block,
+and no consumption above 140~kWh during the summer months.
+
+Heterogeneity by typical electricity sector is pronounced
+(Table~\ref{tab:sector}). Lima (ST1) records average consumption of 160~kWh
+and 42.8\% of households above the threshold, against the rural isolated
+systems (SER) with 37.5~kWh and barely 3\%. The discount structure operates in
+three blocks: for the first 30~kWh the discount is proportional to the energy
+charge; between 31 and 140~kWh it is a fixed amount; above 140~kWh the
+household becomes a net contributor to the fund.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Electricity consumption distribution by typical sector, ERCUE 2025.}
+\label{tab:sector}
+\begin{tabular}{lccccccc}
+\toprule
+Sector & Mean & Median & $\leq$30 & 31--140 & $>$140 & Poverty \\
+ & (kWh) & (kWh) & (\%) & (\%) & (\%) & (\%) \\
+\midrule
+ST1 (Lima)        & 160.2 & 129.8 & 3.3  & 53.9 & 42.8 & 16.1 \\
+ST2 (Urban mid)   & 92.8  & 75.3  & 15.9 & 66.4 & 17.7 & 18.1 \\
+ST3 (Urban-rural) & 52.7  & 36.8  & 43.0 & 50.1 & 6.9  & 34.8 \\
+ST4 (Rural)       & 32.6  & 17.0  & 67.7 & 29.3 & 3.0  & 32.9 \\
+SER (Rural isol.) & 37.5  & 26.9  & 59.5 & 37.5 & 3.0  & 32.3 \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Source: ERCUE 2025.
+\end{table}
+
+\section{Data and Empirical Strategy}
+
+\paragraph{Data.} The analysis uses microdata from ERCUE 2025, a probabilistic,
+stratified, multi-stage survey representative at the national, departmental and
+urban/rural level, with fieldwork conducted between September and November
+2024. The sample comprises 15{,}485 households (14{,}815 with valid
+consumption data) across 25 departments, and the expansion factor scales the
+observations to the universe of 9.3~million households with electricity
+access. Two relevant limitations are that ERCUE does not contain the regulated
+tariff by electrical system (approximated through the implicit price,
+expenditure/consumption) nor the INEI block-stratum classification, and that
+the cross-sectional design precludes dynamic analysis.
+
+\paragraph{Energy-poverty indicators.} The household energy burden is
+$V_i = G^{\text{elec}}_i / G^{\text{total}}_i$. A household is classified as
+energy-overloaded (\textit{2M}) when this ratio exceeds twice the national
+median:
+\begin{equation}
+2M_i = \mathbb{1}\!\left(V_i > 2\widetilde{V}\right).
+\end{equation}
+Because indicators based solely on relative expenditure can understate
+deprivation when households suppress consumption, I add the hidden energy
+poverty (HEP) indicator, which flags households whose absolute electricity
+expenditure falls below half the median of their reference group
+\citep{thomson2016}:
+\begin{equation}
+\text{HEP}_i = \mathbb{1}\!\left(G^{\text{elec}}_i <
+0.5 \times \widetilde{G}^{\text{elec}}_{\text{group}_i}\right),
+\end{equation}
+where the group is defined by geographic area.
+
+\paragraph{Identification.} The strategy compares households on either side of
+the 140~kWh administrative threshold within narrow consumption windows: a main
+specification of $\pm20$~kWh ($N\approx1{,}286$) and a robustness window of
+$\pm30$~kWh ($N\approx1{,}949$). The parameter of interest is
+$\tau = E[Y_i \mid C_i < 140] - E[Y_i \mid C_i \geq 140]$, with
+$Y_i \in \{2M_i, \text{HEP}_i\}$; standard errors come from a nonparametric
+bootstrap with 2{,}000 replications. Although a regulatory threshold suggests a
+regression-discontinuity (RD) design, three features preclude its valid
+application: FOSE eligibility does not depend exclusively on consumption, the
+data are cross-sectional, and compositional heterogeneity around the threshold
+violates the continuity assumption.
+
+\paragraph{Estimation.} Coarsened Exact Matching \citep[CEM,][]{iacus2012} is
+the main method. The final specification retains three covariates---grouped
+typical sector, area (urban/rural) and household size---generating 17 cells
+with 99.8\% common support. The ATT estimator is
+$\widehat{\tau}_{\text{ATT}} = \sum_j (n_{1j}/N_1)(\overline{Y_{1j}}-\overline{Y_{0j}})$,
+where eligibility is $T_i = \mathbb{1}(C_i<140)$. Inverse probability weighting
+(IPW) serves as a sensitivity check. This paper evaluates the discriminating
+capacity of the eligibility rule and should not be read as a causal estimate of
+the subsidy's impact on welfare.
+
+\section{Results}
+
+\subsection{Targeting errors}
+
+84.1\% of ERCUE 2025 households consume at or below 140~kWh, making them
+eligible for the FOSE. This near-universal coverage generates a 69.4\%
+inclusion error: seven of every ten consumption-eligible households are not in
+monetary poverty. Disaggregation by sector shows the inclusion error is
+substantially larger in urban sectors (74.8\% in ST1, 78.6\% in ST2) than in
+rural sectors (60--63\%), reflecting greater income heterogeneity in urban
+areas \citep{levinson2022}. Exclusion error by the consumption criterion is
+5.3\% but rises to 20.3\% in ST1. The main normative exclusion criterion in
+rural sectors is not the consumption threshold but the shared-meter condition:
+8.5\% of eligible SER households share an electricity supply point, an
+exclusion driven by agricultural arrangements rather than ability to pay.
+
+Figure~\ref{fig:cov} shows that the 2022 reform pushed national coverage from
+53.8\% to 76.1\% while the inclusion error edged up to 75.7\% under the full
+rule. Table~\ref{tab:target} summarises the targeting indicators under
+alternative eligibility definitions.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{fig2_coverage_errors.png}
+\caption{Evolution of FOSE coverage and targeting errors, 2019--2025. Source:
+own elaboration with ERCUE 2019, 2023 and 2025.}
+\label{fig:cov}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\small
+\caption{Targeting indicators by eligibility definition, ERCUE 2025.}
+\label{tab:target}
+\begin{tabular}{lccc}
+\toprule
+Indicator & By consumption & Full rule & Full rule \\
+ & & (weighted) & (unweighted) \\
+\midrule
+Definition       & $C\leq140$ kWh & + meter + stratum & + meter + stratum \\
+Coverage         & 84.1\% & 76.1\% & 76.1\% \\
+Inclusion error  & 69.4\% & 75.5\% & --- \\
+Exclusion error  & 5.3\%  & 10.4\% & 15.2\% \\
+\bottomrule
+\end{tabular}
+\\[2pt]
+\footnotesize Source: ERCUE 2025.
+\end{table}
+
+\subsection{Discriminating power of the threshold}
+
+The crude difference between eligible and excluded households in the
+$\pm20$~kWh window is $-1.03$~pp and not significant. Applying CEM, the ATT is
+$-2.37$~pp (SE~$=2.43$; $p=0.330$). The $\pm30$~kWh robustness window yields an
+ATT of $-5.72$~pp ($p=0.003$), significant at the 1\% level, and IPW gives a
+consistent $-2.09$~pp (SE~$=2.35$; $p=0.376$). Common support is adequate: the
+mean propensity score is 0.575 for eligibles and 0.571 for excluded
+households. Figure~\ref{fig:est} compares the estimators.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig3_att_estimators.png}
+\caption{Difference in energy overload (2M) associated with FOSE eligibility:
+comparison of estimators. Source: ERCUE 2025.}
+\label{fig:est}
+\end{figure}
+
+The negative sign of the ATT and the significance in the wide window suggest
+the threshold points in the right direction, but the difference is modest and
+insignificant in the main window: the FOSE discount is too small to create a
+sharp separation. For a household consuming 130~kWh, the median FOSE discount
+is S/~10.72, barely 10\% of a S/~105 bill---convergent with international
+evidence on tariff subsidies of insufficient scale
+\citep{bagnoli2022,garcia2021,llorca2025}. Importantly, in the $\pm20$~kWh
+window the HEP rate is exactly 0.0\% for both eligible and excluded households:
+near the threshold, energy poverty manifests exclusively as financial overload,
+not deprivation.
+
+\subsection{Heterogeneity by poverty status}
+
+The most relevant finding emerges when disaggregating by monetary-poverty
+status (Figure~\ref{fig:het}). Among non-extreme poor households in the
+$\pm20$~kWh window ($N=121$), the ATT is $-20.29$~pp ($p=0.014$). Among
+non-poor households ($N=1{,}132$) the effect is essentially null. For
+extreme-poor households ($N=9$) estimation is not feasible due to insufficient
+sample. The threshold does possess discriminating power, but only among
+households that genuinely face energy vulnerability; because 69.4\% of
+eligibles are not poor, the signal dilutes in the full sample. This $-20$~pp
+result is stable across all windows from $\pm15$ to $\pm30$~kWh.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig4_heterogeneity.png}
+\caption{Heterogeneity of the FOSE effect on energy overload by poverty status
+(CEM, $\pm20$~kWh). Source: ERCUE 2025.}
+\label{fig:het}
+\end{figure}
+
+\subsection{Counterfactual: a scenario without the FOSE}
+
+To gauge the magnitude of the FOSE's protective effect, I construct a
+counterfactual that removes the discount (Figure~\ref{fig:cf}). The energy
+overload rate would rise from 17.0\% to 21.2\% in ST1 ($+4.3$~pp), from 9.7\%
+to 18.0\% in ST3 ($+8.3$~pp), and from 12.3\% to 24.3\% in SER ($+12.0$~pp).
+The protective effect is largest in rural sectors, where the proportional
+discount of the first block (60\%) has greater incidence. Thus, even though the
+instrument is poorly targeted in the aggregate, it provides meaningful
+protection precisely where consumption is lowest.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.92\textwidth]{fig5_counterfactual.png}
+\caption{Counterfactual simulation: energy overload (2M) with and without the
+FOSE, by typical sector. Source: ERCUE 2025; eligible households.}
+\label{fig:cf}
+\end{figure}
+
+\section{Conclusions and Policy Implications}
+
+This paper has evaluated the targeting and effectiveness of the FOSE as an
+energy-poverty mitigation instrument in Peru, using ERCUE 2025 microdata and
+quasi-experimental matching methods. Three conclusions follow.
+
+\textit{First}, the FOSE shows structural targeting deficiencies. The 69.4\%
+inclusion error is a direct consequence of a quasi-universal design based
+solely on electricity consumption---a weak proxy for socioeconomic
+vulnerability whose discriminating power varies by sector (74.8--78.6\% in
+urban areas versus 60\% in rural areas). The main exclusion criterion in the
+SER is normative---the shared-meter rule---not the consumption threshold.
+
+\textit{Second}, the 140~kWh threshold produces no significant separation in
+the probability of energy overload between comparable eligible and excluded
+households. The null aggregate result is explained by the composition of the
+eligible group: 69.4\% are not poor. Among non-extreme poor households the ATT
+is $-20.29$~pp ($p=0.014$). The threshold has discriminating power, but it is
+masked by the massive inclusion of non-vulnerable households. The
+counterfactual shows that removing the FOSE would raise the overload rate by
+4.3~pp (ST1) to 12.0~pp (SER).
+
+\textit{Third}, HEP is exactly zero in the analysis window: near the threshold,
+energy poverty is financial overload, not deprivation. The FOSE faces two
+distinct problems in distinct segments---deprivation among very-low-consumption
+households (where the barrier is access) and overload among
+intermediate-consumption households (where the barrier is affordability)---and
+a single consumption threshold cannot address both at once.
+
+In short, the FOSE does not fail because the subsidy is insufficient, but
+because the criterion identifying the beneficiary is weakly correlated with the
+dimension of vulnerability it intends to correct. The results suggest three
+reform avenues: (i) a transition toward socioeconomic targeting using Peru's
+Household Targeting System (SISFOH), following the 2017 reform of Spain's
+\textit{Bono Social}; (ii) an urgent review of the multi-meter exclusion rule;
+and (iii) a recalibration of the block structure or its complementation with
+direct transfers. The main limitation is the cross-sectional design; the
+natural extension is a difference-in-differences design exploiting the three
+ERCUE editions (2019, 2023 and 2025).
+
+\begin{thebibliography}{99}
+\setlength{\itemsep}{2pt}
+
+\bibitem[Arze del Granado et al.(2012)]{arze2012} Arze del Granado, J., Coady,
+D., \& Gillingham, R. (2012). The unequal benefits of fuel subsidies: A review
+of evidence for developing countries. \textit{World Development, 40}(11),
+2234--2248.
+
+\bibitem[Bagnoli \& Bertom\'eu-S\'anchez(2022)]{bagnoli2022} Bagnoli, L., \&
+Bertom\'eu-S\'anchez, S. (2022). How effective has the electricity social rate
+been in reducing energy poverty in Spain? \textit{Energy Economics, 106},
+105792.
+
+\bibitem[Boardman(1991)]{boardman1991} Boardman, B. (1991). \textit{Fuel
+poverty: From cold homes to affordable warmth}. Belhaven Press.
+
+\bibitem[Brown et al.(2018)]{brown2018} Brown, C., Ravallion, M., \& van de
+Walle, D. (2018). A poor means test? Econometric targeting in Africa.
+\textit{Journal of Development Economics, 134}, 109--124.
+
+\bibitem[Coady et al.(2004)]{coady2004} Coady, D., Grosh, M., \& Hoddinott, J.
+(2004). Targeting outcomes redux. \textit{The World Bank Research Observer,
+19}(1), 61--85.
+
+\bibitem[EPOV(2023)]{epov2023} EPOV (2023). \textit{Energy poverty in the EU}.
+EU Energy Poverty Observatory, European Commission.
+
+\bibitem[Garc\'ia \'Alvarez \& Tol(2021)]{garcia2021} Garc\'ia \'Alvarez, G.,
+\& Tol, R. S. J. (2021). The impact of the Bono Social de Electricidad on
+energy poverty in Spain. \textit{Energy Economics, 103}, 105554.
+
+\bibitem[Iacus et al.(2012)]{iacus2012} Iacus, S. M., King, G., \& Porro, G.
+(2012). Causal inference without balance checking: Coarsened exact matching.
+\textit{Political Analysis, 20}(1), 1--24.
+
+\bibitem[Levinson \& Silva(2022)]{levinson2022} Levinson, A., \& Silva, E.
+(2022). The electric Gini: Income redistribution through energy prices.
+\textit{American Economic Journal: Economic Policy, 14}(2), 341--365.
+
+\bibitem[Llorca \& Rodr\'iguez-\'Alvarez(2025)]{llorca2025} Llorca, M., \&
+Rodr\'iguez-\'Alvarez, A. (2025). Is Spain's energy voucher lighting the way
+for the poor? A microeconomic evaluation of the Bono Social El\'ectrico.
+\textit{Cambridge Working Papers in Economics 2542}, University of Cambridge.
+
+\bibitem[Osinergmin(2025)]{osinergmin2025} Osinergmin (2025). \textit{Reporte
+de an\'alisis econ\'omico sectorial: Electricidad}. Gerencia de Pol\'iticas y
+An\'alisis Econ\'omico.
+
+\bibitem[Thomson et al.(2016)]{thomson2016} Thomson, H., Snell, C., \& Liddell,
+C. (2016). Fuel poverty in the European Union: A concept in need of definition?
+\textit{People, Place and Policy, 10}(1), 5--24.
+
+\bibitem[Whittington et al.(2015)]{whittington2015} Whittington, D., Nauges,
+C., Fuente, D., \& Wu, X. (2015). A diagnostic tool for estimating the
+incidence of subsidies delivered by water utilities in low- and medium-income
+countries. \textit{Utilities Policy, 34}, 70--81.
+
+\end{thebibliography}
+
+\end{document}
